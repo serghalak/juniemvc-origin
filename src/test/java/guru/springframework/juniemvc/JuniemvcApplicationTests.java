@@ -1,4 +1,4 @@
-package guruspringframework.juniemvc;
+package guru.springframework.juniemvc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
