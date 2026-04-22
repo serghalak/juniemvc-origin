@@ -1,42 +1,56 @@
 package guru.springframework.juniemvc.services;
 
 import guru.springframework.juniemvc.entities.Beer;
+import guru.springframework.juniemvc.mappers.BeerMapper;
+import guru.springframework.juniemvc.model.BeerDTO;
 import guru.springframework.juniemvc.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class BeerServiceImpl implements BeerService {
+@Transactional
+class BeerServiceImpl implements BeerService {
 
     private final BeerRepository beerRepository;
+    private final BeerMapper beerMapper;
 
     @Override
-    public List<Beer> listBeers() {
-        return beerRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<BeerDTO> listBeers() {
+        return beerRepository.findAll()
+                .stream()
+                .map(beerMapper::beerToBeerDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Beer> getBeerById(Integer id) {
-        return beerRepository.findById(id);
+    @Transactional(readOnly = true)
+    public Optional<BeerDTO> getBeerById(Integer id) {
+        return beerRepository.findById(id)
+                .map(beerMapper::beerToBeerDto);
     }
 
     @Override
-    public Beer saveNewBeer(Beer beer) {
-        return beerRepository.save(beer);
+    public BeerDTO saveNewBeer(BeerDTO beer) {
+        return beerMapper.beerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(beer)));
     }
 
     @Override
-    public Optional<Beer> updateBeerById(Integer beerId, Beer beer) {
+    public Optional<BeerDTO> updateBeerById(Integer beerId, BeerDTO beerDto) {
         return beerRepository.findById(beerId).map(foundBeer -> {
-            foundBeer.setBeerName(beer.getBeerName());
-            foundBeer.setBeerStyle(beer.getBeerStyle());
-            foundBeer.setPrice(beer.getPrice());
-            foundBeer.setUpc(beer.getUpc());
-            return beerRepository.save(foundBeer);
+            foundBeer.setBeerName(beerDto.getBeerName());
+            foundBeer.setBeerStyle(beerDto.getBeerStyle());
+            foundBeer.setPrice(beerDto.getPrice());
+            foundBeer.setUpc(beerDto.getUpc());
+            foundBeer.setQuantityOnHand(beerDto.getQuantityOnHand());
+            foundBeer.setVersion(beerDto.getVersion());
+            return beerMapper.beerToBeerDto(beerRepository.save(foundBeer));
         });
     }
 

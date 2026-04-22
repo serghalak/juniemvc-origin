@@ -1,19 +1,19 @@
 package guru.springframework.juniemvc.services;
 
-import guru.springframework.juniemvc.entities.Beer;
+import guru.springframework.juniemvc.model.BeerDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface BeerService {
 
-    List<Beer> listBeers();
+    List<BeerDTO> listBeers();
 
-    Optional<Beer> getBeerById(Integer id);
+    Optional<BeerDTO> getBeerById(Integer id);
 
-    Beer saveNewBeer(Beer beer);
+    BeerDTO saveNewBeer(BeerDTO beer);
 
-    Optional<Beer> updateBeerById(Integer beerId, Beer beer);
+    Optional<BeerDTO> updateBeerById(Integer beerId, BeerDTO beer);
 
     Boolean deleteById(Integer beerId);
 }

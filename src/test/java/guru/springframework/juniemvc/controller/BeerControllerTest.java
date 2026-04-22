@@ -1,7 +1,7 @@
 package guru.springframework.juniemvc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import guru.springframework.juniemvc.entities.Beer;
+import guru.springframework.juniemvc.model.BeerDTO;
 import guru.springframework.juniemvc.services.BeerService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +35,8 @@ class BeerControllerTest {
     @Test
     void testListBeers() throws Exception {
         given(beerService.listBeers()).willReturn(Arrays.asList(
-                Beer.builder().id(1).beerName("Beer 1").build(),
-                Beer.builder().id(2).beerName("Beer 2").build()
+                BeerDTO.builder().id(1).beerName("Beer 1").build(),
+                BeerDTO.builder().id(2).beerName("Beer 2").build()
         ));
 
         mockMvc.perform(get("/api/v1/beer")
@@ -48,7 +48,7 @@ class BeerControllerTest {
 
     @Test
     void testGetBeerById() throws Exception {
-        Beer beer = Beer.builder().id(1).beerName("Beer 1").build();
+        BeerDTO beer = BeerDTO.builder().id(1).beerName("Beer 1").build();
 
         given(beerService.getBeerById(any())).willReturn(Optional.of(beer));
 
@@ -62,14 +62,14 @@ class BeerControllerTest {
 
     @Test
     void testCreateNewBeer() throws Exception {
-        Beer beer = Beer.builder()
+        BeerDTO beer = BeerDTO.builder()
                 .beerName("New Beer")
                 .beerStyle("IPA")
                 .upc("123123")
                 .price(new BigDecimal("12.99"))
                 .build();
 
-        given(beerService.saveNewBeer(any())).willReturn(Beer.builder().id(1).beerName("New Beer").build());
+        given(beerService.saveNewBeer(any())).willReturn(BeerDTO.builder().id(1).beerName("New Beer").build());
 
         mockMvc.perform(post("/api/v1/beer")
                 .accept(MediaType.APPLICATION_JSON)
@@ -80,7 +80,7 @@ class BeerControllerTest {
 
     @Test
     void testUpdateBeer() throws Exception {
-        Beer beer = Beer.builder().id(1).beerName("Updated Name").build();
+        BeerDTO beer = BeerDTO.builder().id(1).beerName("Updated Name").build();
 
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
 

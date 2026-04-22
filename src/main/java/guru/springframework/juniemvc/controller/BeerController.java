@@ -1,53 +1,52 @@
 package guru.springframework.juniemvc.controller;
 
-import guru.springframework.juniemvc.entities.Beer;
+import guru.springframework.juniemvc.model.BeerDTO;
 import guru.springframework.juniemvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/beer")
-public class BeerController {
+class BeerController {
 
     private final BeerService beerService;
 
     @GetMapping
-    public List<Beer> listBeers() {
-        return beerService.listBeers();
+    ResponseEntity<List<BeerDTO>> listBeers() {
+        return new ResponseEntity<>(beerService.listBeers(), HttpStatus.OK);
     }
 
     @GetMapping("/{beerId}")
-    public Beer getBeerById(@PathVariable("beerId") Integer beerId) {
-        return beerService.getBeerById(beerId).orElseThrow(RuntimeException::new);
+    ResponseEntity<BeerDTO> getBeerById(@PathVariable("beerId") Integer beerId) {
+        return new ResponseEntity<>(beerService.getBeerById(beerId).orElseThrow(RuntimeException::new), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity handlePost(@RequestBody Beer beer) {
-        Beer savedBeer = beerService.saveNewBeer(beer);
+    ResponseEntity<BeerDTO> handlePost(@RequestBody BeerDTO beer) {
+        BeerDTO savedBeer = beerService.saveNewBeer(beer);
 
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{beerId}")
-    public ResponseEntity updateById(@PathVariable("beerId") Integer beerId, @RequestBody Beer beer) {
+    ResponseEntity<Void> updateById(@PathVariable("beerId") Integer beerId, @RequestBody BeerDTO beer) {
         if (beerService.updateBeerById(beerId, beer).isEmpty()) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{beerId}")
-    public ResponseEntity deleteById(@PathVariable("beerId") Integer beerId) {
+    ResponseEntity<Void> deleteById(@PathVariable("beerId") Integer beerId) {
         if (!beerService.deleteById(beerId)) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
