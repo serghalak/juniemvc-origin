@@ -1,142 +1,185 @@
-### Implementation Guide: JPA Relationships with Lombok for Beer Order System
+## Implementation Instructions
+Your task is to update the project with the given JPA entities and to implement RESTful CRUD style controllers for
+the new JPA entities.
 
-Based on the analyzed ERD, here are the detailed instructions for implementing the relationships between `BeerOrder`, `BeerOrderLine`, and `Beer`.
+### 1. Common Base Entity Structure
 
----
-
-#### 1. Relationship Mapping Overview
-*   **`BeerOrder` (1) ↔ (N) `BeerOrderLine`**: A bidirectional One-to-Many relationship. `BeerOrderLine` is the owning side.
-*   **`BeerOrderLine` (N) ↔ (1) `Beer`**: A Many-to-One relationship. `BeerOrderLine` holds the foreign key to `Beer`.
-
----
-
-#### 2. Entity Implementation: `BeerOrder`
-The `BeerOrder` entity serves as the parent container for order items.
+First, create a base entity class to handle common fields:
 
 ```java
+@MappedSuperclass
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-public class BeerOrder {
-
+public abstract class BaseEntity {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    
     @Version
     private Integer version;
-
-    private String customerRef;
-    private BigDecimal paymentAmount;
-    private String status;
-
+    
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdDate;
-
+    
     @UpdateTimestamp
     private LocalDateTime updateDate;
+}
+```
 
-    // One-to-Many relationship to BeerOrderLine
-    @Builder.Default
-    @OneToMany(mappedBy = "beerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+### 2. Beer Entity
+
+```java
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Beer extends BaseEntity {
+    
+    @Column(nullable = false)
+    private String beerName;
+    
+    private String beerStyle;
+    
+    private String upc;
+    
+    private Integer quantityOnHand;
+    
+    @Column(precision = 19, scale = 2)
+    private BigDecimal price;
+    
+    // Bidirectional relationship with BeerOrderLine
+    @OneToMany(mappedBy = "beer")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<BeerOrderLine> beerOrderLines = new HashSet<>();
 }
 ```
 
----
-
-#### 3. Entity Implementation: `BeerOrderLine`
-This is the "Many" side (owning side) for both `BeerOrder` and `Beer`.
+### 3. BeerOrder Entity
 
 ```java
+@Entity
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+public class BeerOrder extends BaseEntity {
+    
+    private String customerRef;
+    
+    @Column(precision = 19, scale = 2)
+    private BigDecimal paymentAmount;
+    
+    private String status;
+    
+    // Bidirectional relationship with BeerOrderLine
+    @OneToMany(mappedBy = "beerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<BeerOrderLine> beerOrderLines = new HashSet<>();
+    
+    // Helper method to manage bidirectional relationship
+    public void addBeerOrderLine(BeerOrderLine line) {
+        if (beerOrderLines == null) {
+            beerOrderLines = new HashSet<>();
+        }
+        beerOrderLines.add(line);
+        line.setBeerOrder(this);
+    }
+    
+    public void removeBeerOrderLine(BeerOrderLine line) {
+        beerOrderLines.remove(line);
+        line.setBeerOrder(null);
+    }
+}
+```
+
+### 4. BeerOrderLine Entity
+
+```java
 @Entity
-public class BeerOrderLine {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Version
-    private Integer version;
-
-    // Relationship to BeerOrder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class BeerOrderLine extends BaseEntity {
+    
     @ManyToOne
     @JoinColumn(name = "beer_order_id")
     private BeerOrder beerOrder;
-
-    // Relationship to Beer
+    
     @ManyToOne
     @JoinColumn(name = "beer_id")
     private Beer beer;
-
+    
     private Integer orderQuantity;
+    
     private Integer quantityAllocated;
+    
     private String status;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdDate;
-
-    @UpdateTimestamp
-    private LocalDateTime updateDate;
 }
 ```
 
----
+### 5. Create DTOs
+In the model package create DTO POJOs matching the properties of the added JPA entities.
 
-#### 4. Entity Implementation: `Beer`
-The `Beer` entity represents the product. It can optionally have a back-reference to its order lines.
+### 6. Create Mapstruct Mappers
+Add the necessary mappers for type conversions to and from DTOs / JPA entities.
 
-```java
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-public class Beer {
+### 7. Spring Data Repositories
+Add Spring Data Repositories for the new JPA entities.
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+### 7. Implement the Service Layer
+Create new service interfaces and implementations to support CRUD operations initiated in controllers.
 
-    @Version
-    private Integer version;
+### 8. Create new Spring MVC Controllers
+Create the necessary controllers for the new entities added to the project
 
-    private String beerName;
-    private String beerStyle;
-    private String upc;
-    private Integer quantityOnHand;
-    private BigDecimal price;
+### 9. Test Coverage
+Add unit tests for the created components. Verify tests are passing.
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdDate;
+Provide Tests for:
+- mappers
+- repositories
+- services
+- controllers
 
-    @UpdateTimestamp
-    private LocalDateTime updateDate;
+## Implementation Notes
 
-    // Optional: Bidirectional mapping back to Order Lines
-    @Builder.Default
-    @OneToMany(mappedBy = "beer")
-    private Set<BeerOrderLine> beerOrderLines = new HashSet<>();
-}
-```
+1. **Lombok Annotations**:
+    - `@Getter` and `@Setter`: Generate getters and setters
+    - `@NoArgsConstructor`: Generate a no-args constructor
+    - `@AllArgsConstructor`: Generate a constructor with all fields
+    - `@Builder`: Enable the builder pattern
+    - `@ToString.Exclude` and `@EqualsAndHashCode.Exclude`: Prevent circular references in toString() and equals()/hashCode()
 
----
+2. **JPA Annotations**:
+    - `@Entity`: Mark class as JPA entity
+    - `@MappedSuperclass`: Base class for entities
+    - `@Id`: Primary key
+    - `@GeneratedValue`: Auto-generate primary key
+    - `@Version`: Optimistic locking
+    - `@Column`: Column properties
+    - `@OneToMany` and `@ManyToOne`: Relationship mappings
+    - `@JoinColumn`: Foreign key column
+    - `@CreationTimestamp` and `@UpdateTimestamp`: Automatic timestamp management
 
-#### 5. Critical Development Notes
-*   **Lombok vs. JPA**: Avoid using `@Data` or `@EqualsAndHashCode` on JPA entities. They often include all fields, which can trigger `LazyInitializationException` or cause infinite recursion in bidirectional relationships. Use `@Getter` and `@Setter` instead.
-*   **Collection Initialization**: Use `@Builder.Default` when initializing collections (like `HashSet`) to prevent the Lombok Builder from setting them to `null`.
-*   **Cascading**: `CascadeType.ALL` on `BeerOrder` ensures that when an order is saved or deleted, its lines are handled automatically.
-*   **Orphan Removal**: `orphanRemoval = true` ensures that removing a `BeerOrderLine` from the `beerOrderLines` set in `BeerOrder` will result in that line being deleted from the database.
-*   **Performance**: Use `Set` instead of `List` for `@OneToMany` collections to avoid Hibernate "bag" performance issues when merging entities.
+3. **Bidirectional Relationship Management**:
+    - Use helper methods in BeerOrder to maintain both sides of the relationship
+    - Use `mappedBy` to indicate the owning side of relationships
+    - Use `CascadeType.ALL` and `orphanRemoval = true` for parent-child relationships
+
+4. **Collection Initialization**:
+    - Initialize collections to empty sets to avoid null pointer exceptions
+    - Use `@Builder.Default` to ensure collections are initialized when using the builder pattern
+
+5. **Data Types**:
+    - Use `BigDecimal` for monetary values with appropriate precision and scale
+    - Use `LocalDateTime` for date/time fields

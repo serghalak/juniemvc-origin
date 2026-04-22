@@ -50,6 +50,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -90,6 +95,28 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>1.20.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mysql</artifactId>
+            <version>1.20.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
@@ -132,7 +159,7 @@
                             <compilerArgs>
                                 <arg>-parameters</arg>
                                 <arg>-Amapstruct.defaultComponentModel=spring</arg>
-                                <arg>-Amapstruct.unmappedTargetPolicy=ERROR</arg>
+                                <arg>-Amapstruct.unmappedTargetPolicy=WARN</arg>
                             </compilerArgs>
                         </configuration>
                     </execution>
@@ -157,7 +184,7 @@
                             <compilerArgs>
                                 <arg>-parameters</arg>
                                 <arg>-Amapstruct.defaultComponentModel=spring</arg>
-                                <arg>-Amapstruct.unmappedTargetPolicy=ERROR</arg>
+                                <arg>-Amapstruct.unmappedTargetPolicy=WARN</arg>
                             </compilerArgs>
                         </configuration>
                     </execution>

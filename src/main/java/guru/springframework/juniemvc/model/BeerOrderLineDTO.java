@@ -1,27 +1,31 @@
 package guru.springframework.juniemvc.model;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BeerDTO {
+public class BeerOrderLineDTO {
     private Integer id;
     private Integer version;
-    private String beerName;
-    private String beerStyle;
-    private String upc;
-    private Integer quantityOnHand;
-    private BigDecimal price;
-    private Set<BeerOrderLineDTO> beerOrderLines;
+
+    @NotNull
+    private Integer beerId;
+
+    @NotNull
+    @Positive
+    private Integer orderQuantity;
+
+    private Integer quantityAllocated;
+    private String status;
     private LocalDateTime createdDate;
-    private LocalDateTime updatedDate;
+    private LocalDateTime updateDate;
 }
