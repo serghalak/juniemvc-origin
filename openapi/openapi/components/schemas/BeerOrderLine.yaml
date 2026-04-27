@@ -1,0 +1,49 @@
+type: object
+required:
+  - beerId
+  - orderQuantity
+properties:
+  id:
+    type: integer
+    format: int32
+    description: Unique identifier of the beer order line
+    readOnly: true
+    example: 1
+  version:
+    type: integer
+    format: int32
+    description: Version number of the beer order line
+    readOnly: true
+    example: 0
+  beerId:
+    type: integer
+    format: int32
+    description: Unique identifier of the beer
+    example: 1
+  orderQuantity:
+    type: integer
+    format: int32
+    description: Quantity of the beer ordered
+    minimum: 1
+    example: 2
+  quantityAllocated:
+    type: integer
+    format: int32
+    description: Quantity of the beer allocated
+    example: 2
+  status:
+    type: string
+    description: Status of the beer order line
+    example: "NEW"
+  createdDate:
+    type: string
+    format: date-time
+    description: The date and time when the beer order line was created
+    readOnly: true
+    example: "2026-04-27T14:59:00Z"
+  updateDate:
+    type: string
+    format: date-time
+    description: The date and time when the beer order line was last updated
+    readOnly: true
+    example: "2026-04-27T14:59:00Z"

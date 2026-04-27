@@ -1,0 +1,89 @@
+get:
+  tags:
+    - Beer
+  summary: Get beer by ID
+  description: Returns a single beer by its ID.
+  operationId: getBeerById
+  parameters:
+    - name: beerId
+      in: path
+      description: ID of the beer to return
+      required: true
+      schema:
+        type: integer
+        format: int32
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Beer.yaml'
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Beer not found
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []
+put:
+  tags:
+    - Beer
+  summary: Update an existing beer
+  description: Updates a beer by its ID.
+  operationId: updateById
+  parameters:
+    - name: beerId
+      in: path
+      description: ID of the beer to update
+      required: true
+      schema:
+        type: integer
+        format: int32
+  requestBody:
+    description: Beer object that needs to be updated
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/Beer.yaml'
+  responses:
+    '204':
+      description: Beer updated
+    '400':
+      description: Invalid request
+      $ref: ../components/responses/Problem.yaml
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Beer not found
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []
+delete:
+  tags:
+    - Beer
+  summary: Delete a beer
+  description: Deletes a beer by its ID.
+  operationId: deleteById
+  parameters:
+    - name: beerId
+      in: path
+      description: ID of the beer to delete
+      required: true
+      schema:
+        type: integer
+        format: int32
+  responses:
+    '204':
+      description: Beer deleted
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Beer not found
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []

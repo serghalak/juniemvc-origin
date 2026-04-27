@@ -1,0 +1,62 @@
+type: object
+required:
+  - beerName
+  - beerStyle
+  - upc
+  - price
+properties:
+  id:
+    type: integer
+    format: int32
+    description: Unique identifier of the beer
+    readOnly: true
+    example: 1
+  version:
+    type: integer
+    format: int32
+    description: Version number of the beer
+    readOnly: true
+    example: 0
+  beerName:
+    type: string
+    description: Name of the beer
+    minLength: 1
+    maxLength: 100
+    example: "Galaxy IPA"
+  beerStyle:
+    type: string
+    description: Style of the beer
+    example: "IPA"
+  upc:
+    type: string
+    description: Universal Product Code of the beer
+    example: "123456789012"
+  quantityOnHand:
+    type: integer
+    format: int32
+    description: Quantity of the beer on hand
+    minimum: 0
+    example: 100
+  price:
+    type: number
+    format: double
+    description: Price of the beer
+    minimum: 0
+    example: 9.99
+  beerOrderLines:
+    type: array
+    description: List of beer order lines associated with the beer
+    items:
+      $ref: './BeerOrderLine.yaml'
+  createdDate:
+    type: string
+    format: date-time
+    description: The date and time when the beer was created
+    readOnly: true
+    example: "2026-04-27T14:59:00Z"
+  updatedDate:
+    type: string
+    format: date-time
+    description: The date and time when the beer was last updated
+    readOnly: true
+    example: "2026-04-27T14:59:00Z"
