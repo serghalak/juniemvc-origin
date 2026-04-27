@@ -192,4 +192,23 @@ logger.atDebug()
 
 * **Automated Schema Management:** Flyway automatically applies pending migrations on application startup, ensuring that all environments (development, test, production) stay in sync with the required database schema.
 * **Version Control for Database:** By treating schema changes as code and versioning them, you can easily track history, roll back if necessary (with paid versions or manual undo scripts), and collaborate with other developers without manual SQL execution.
-* **Consistency:** Using the default `db/migration` path allows Spring Boot's auto-configuration to pick up migrations without additional settings, reducing configuration overhead.
+## 16. OpenAPI Specification Guidelines
+* Maintain the OpenAPI specification in the `openapi/openapi` directory.
+* Use a modular approach by splitting the specification into multiple files (paths, components, schemas) for better maintainability.
+* Follow specific file naming conventions for path operations and component definitions.
+* Test the specification using `npm test` from the `openapi/` directory.
+
+**Explanation:**
+
+* **Modular Structure:** The main entry point is `openapi/openapi/openapi.yaml`. It references path items and components located in subdirectories.
+* **Path Operation Naming:** Files for path operations should be placed in `openapi/openapi/paths/`. The filename should reflect the API path, replacing `/` with `_` where necessary and preserving path parameters (e.g., `/users/{username}` becomes `users_{username}.yaml`).
+* **Component Definitions:** Define reusable components (schemas, headers, responses) in `openapi/openapi/components/`.
+    * Schemas: `openapi/openapi/components/schemas/` (e.g., `User.yaml`).
+    * Headers: `openapi/openapi/components/headers/` (e.g., `ExpiresAfter.yaml`).
+    * Responses: `openapi/openapi/components/responses/` (e.g., `Problem.yaml`).
+* **External References:** Use `$ref` to link to external files. Within path files, reference components using relative paths like `../components/schemas/User.yaml`.
+* **Testing:** Use the Redocly CLI to lint and validate the OpenAPI specification. Run the following command in the `openapi/` directory:
+    ```bash
+    npm test
+    ```
+    This command executes `redocly lint` as defined in `package.json`.
