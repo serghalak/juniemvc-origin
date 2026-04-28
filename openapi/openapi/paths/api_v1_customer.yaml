@@ -1,0 +1,48 @@
+get:
+  tags:
+    - Customer
+  summary: List all customers
+  description: Returns a list of all customers in the system.
+  operationId: listCustomers
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../components/schemas/Customer.yaml'
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []
+post:
+  tags:
+    - Customer
+  summary: Create a new customer
+  description: Creates a new customer in the system.
+  operationId: createCustomer
+  requestBody:
+    description: Customer object to be added
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/Customer.yaml'
+  responses:
+    '201':
+      description: Customer created
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Customer.yaml'
+    '400':
+      description: Invalid request
+      $ref: ../components/responses/Problem.yaml
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []

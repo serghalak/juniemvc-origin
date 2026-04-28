@@ -3,6 +3,7 @@ package guru.springframework.juniemvc.entities;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class BeerOrder extends BaseEntity {
+
+    @ManyToOne
+    private Customer customer;
 
     private String customerRef;
 

@@ -1,0 +1,89 @@
+get:
+  tags:
+    - Customer
+  summary: Get customer by ID
+  description: Returns a single customer by its ID.
+  operationId: getCustomerById
+  parameters:
+    - name: customerId
+      in: path
+      description: ID of the customer to return
+      required: true
+      schema:
+        type: integer
+        format: int32
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Customer.yaml'
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Customer not found
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []
+put:
+  tags:
+    - Customer
+  summary: Update an existing customer
+  description: Updates a customer by its ID.
+  operationId: updateCustomerById
+  parameters:
+    - name: customerId
+      in: path
+      description: ID of the customer to update
+      required: true
+      schema:
+        type: integer
+        format: int32
+  requestBody:
+    description: Customer object that needs to be updated
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/Customer.yaml'
+  responses:
+    '204':
+      description: Customer updated
+    '400':
+      description: Invalid request
+      $ref: ../components/responses/Problem.yaml
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Customer not found
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []
+delete:
+  tags:
+    - Customer
+  summary: Delete a customer
+  description: Deletes a customer by its ID.
+  operationId: deleteCustomerById
+  parameters:
+    - name: customerId
+      in: path
+      description: ID of the customer to delete
+      required: true
+      schema:
+        type: integer
+        format: int32
+  responses:
+    '204':
+      description: Customer deleted
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Customer not found
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []

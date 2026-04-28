@@ -1,0 +1,76 @@
+type: object
+required:
+  - name
+  - addressLine1
+  - city
+  - state
+  - postalCode
+properties:
+  id:
+    type: integer
+    format: int32
+    description: Unique identifier of the customer
+    readOnly: true
+    example: 1
+  version:
+    type: integer
+    format: int32
+    description: Version number of the customer
+    readOnly: true
+    example: 0
+  name:
+    type: string
+    description: Name of the customer
+    minLength: 1
+    maxLength: 255
+    example: "John Doe"
+  email:
+    type: string
+    format: email
+    description: Email address of the customer
+    example: "john.doe@example.com"
+  phoneNumber:
+    type: string
+    description: Phone number of the customer
+    example: "555-1234"
+  addressLine1:
+    type: string
+    description: First line of the customer's address
+    minLength: 1
+    maxLength: 255
+    example: "123 Main St"
+  addressLine2:
+    type: string
+    description: Second line of the customer's address
+    maxLength: 255
+    example: "Apt 4B"
+  city:
+    type: string
+    description: City of the customer's address
+    minLength: 1
+    maxLength: 255
+    example: "New York"
+  state:
+    type: string
+    description: State of the customer's address
+    minLength: 1
+    maxLength: 255
+    example: "NY"
+  postalCode:
+    type: string
+    description: Postal code of the customer's address
+    minLength: 1
+    maxLength: 20
+    example: "10001"
+  createdDate:
+    type: string
+    format: date-time
+    description: The date and time when the customer was created
+    readOnly: true
+    example: "2026-04-27T14:59:00Z"
+  updateDate:
+    type: string
+    format: date-time
+    description: The date and time when the customer was last updated
+    readOnly: true
+    example: "2026-04-27T14:59:00Z"

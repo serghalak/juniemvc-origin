@@ -56,6 +56,8 @@ tags:
     description: "This is a tag description."
   - name: Beer
     description: "Operations related to beers."
+  - name: Customer
+    description: "Operations related to customers."
 x-tagGroups:
   - name: General
     tags:
@@ -63,6 +65,7 @@ x-tagGroups:
       - Info
       - Echo
       - Beer
+      - Customer
   - name: Administration
     tags:
       - Admin
@@ -90,6 +93,10 @@ paths:
     $ref: 'paths/api_v1_beer.yaml'
   '/api/v1/beer/{beerId}':
     $ref: 'paths/api_v1_beer_{beerId}.yaml'
+  '/api/v1/customer':
+    $ref: 'paths/api_v1_customer.yaml'
+  '/api/v1/customer/{customerId}':
+    $ref: 'paths/api_v1_customer_{customerId}.yaml'
 components:
   securitySchemes:
     main_auth:
