@@ -1,0 +1,41 @@
+type: object
+required:
+  - shipmentDate
+properties:
+  id:
+    type: integer
+    format: int32
+    description: Unique identifier of the shipment
+    readOnly: true
+    example: 1
+  version:
+    type: integer
+    format: int32
+    description: Version number of the shipment
+    readOnly: true
+    example: 0
+  shipmentDate:
+    type: string
+    format: date-time
+    description: The date and time when the shipment occurred
+    example: "2026-04-29T15:00:00Z"
+  carrier:
+    type: string
+    description: The carrier responsible for the shipment
+    example: "UPS"
+  trackingNumber:
+    type: string
+    description: The tracking number for the shipment
+    example: "1Z9999999999999999"
+  createdDate:
+    type: string
+    format: date-time
+    description: The date and time when the record was created
+    readOnly: true
+    example: "2026-04-29T15:00:00Z"
+  updateDate:
+    type: string
+    format: date-time
+    description: The date and time when the record was last updated
+    readOnly: true
+    example: "2026-04-29T15:00:00Z"

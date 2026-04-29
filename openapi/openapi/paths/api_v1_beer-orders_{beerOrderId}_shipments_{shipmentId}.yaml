@@ -1,0 +1,108 @@
+get:
+  tags:
+    - Beer Order Shipment
+  summary: Get a shipment by ID
+  description: Returns a single shipment record for the specified beer order.
+  operationId: getShipmentById
+  parameters:
+    - name: beerOrderId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The ID of the beer order
+    - name: shipmentId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The ID of the shipment
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/BeerOrderShipment.yaml'
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Shipment not found
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []
+put:
+  tags:
+    - Beer Order Shipment
+  summary: Update a shipment by ID
+  description: Updates an existing shipment record.
+  operationId: updateShipment
+  parameters:
+    - name: beerOrderId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The ID of the beer order
+    - name: shipmentId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The ID of the shipment
+  requestBody:
+    description: Updated shipment object
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/BeerOrderShipment.yaml'
+  responses:
+    '200':
+      description: Shipment updated
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/BeerOrderShipment.yaml'
+    '400':
+      description: Invalid request
+      $ref: ../components/responses/Problem.yaml
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Shipment not found
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []
+delete:
+  tags:
+    - Beer Order Shipment
+  summary: Delete a shipment by ID
+  description: Deletes a shipment record.
+  operationId: deleteShipment
+  parameters:
+    - name: beerOrderId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The ID of the beer order
+    - name: shipmentId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The ID of the shipment
+  responses:
+    '204':
+      description: Shipment deleted
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Shipment not found
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []

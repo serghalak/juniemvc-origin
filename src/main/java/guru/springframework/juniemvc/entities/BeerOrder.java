@@ -37,6 +37,23 @@ public class BeerOrder extends BaseEntity {
     @OneToMany(mappedBy = "beerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BeerOrderLine> beerOrderLines = new HashSet<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "beerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BeerOrderShipment> beerOrderShipments = new HashSet<>();
+
+    public void addBeerOrderShipment(BeerOrderShipment shipment) {
+        if (beerOrderShipments == null) {
+            beerOrderShipments = new HashSet<>();
+        }
+        beerOrderShipments.add(shipment);
+        shipment.setBeerOrder(this);
+    }
+
+    public void removeBeerOrderShipment(BeerOrderShipment shipment) {
+        beerOrderShipments.remove(shipment);
+        shipment.setBeerOrder(null);
+    }
+
     public void addBeerOrderLine(BeerOrderLine line) {
         if (beerOrderLines == null) {
             beerOrderLines = new HashSet<>();

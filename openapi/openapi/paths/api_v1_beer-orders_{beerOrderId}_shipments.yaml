@@ -1,0 +1,71 @@
+get:
+  tags:
+    - Beer Order Shipment
+  summary: List all shipments for a beer order
+  description: Returns a list of all shipments associated with a specific beer order.
+  operationId: listShipments
+  parameters:
+    - name: beerOrderId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The ID of the beer order
+  responses:
+    '200':
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              content:
+                type: array
+                items:
+                  $ref: '../components/schemas/BeerOrderShipment.yaml'
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Beer order not found
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []
+post:
+  tags:
+    - Beer Order Shipment
+  summary: Create a new shipment for a beer order
+  description: Creates a new shipment record for the specified beer order.
+  operationId: createShipment
+  parameters:
+    - name: beerOrderId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The ID of the beer order
+  requestBody:
+    description: Shipment object to be added
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/BeerOrderShipment.yaml'
+  responses:
+    '201':
+      description: Shipment created
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/BeerOrderShipment.yaml'
+    '400':
+      description: Invalid request
+      $ref: ../components/responses/Problem.yaml
+    '401':
+      description: Unauthorized
+      $ref: ../components/responses/Problem.yaml
+    '404':
+      description: Beer order not found
+      $ref: ../components/responses/Problem.yaml
+  security:
+    - api_key: []
