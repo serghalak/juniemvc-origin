@@ -1,5 +1,6 @@
 package guru.springframework.juniemvc.services;
 
+import guru.springframework.juniemvc.exceptions.NotFoundException;
 import guru.springframework.juniemvc.model.CustomerDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -78,6 +80,7 @@ class CustomerServiceTest {
                 .build());
 
         CustomerDTO customerUpdate = CustomerDTO.builder()
+                .id(999) // Attempt to update ID
                 .name("New Name")
                 .addressLine1("New Addr")
                 .city("New City")
@@ -85,10 +88,12 @@ class CustomerServiceTest {
                 .postalCode("11111")
                 .build();
 
-        Optional<CustomerDTO> updatedCustomerOptional = customerService.updateCustomerById(savedCustomer.getId(), customerUpdate);
+        CustomerDTO updatedCustomer = customerService.updateCustomerById(savedCustomer.getId(), customerUpdate);
 
-        assertThat(updatedCustomerOptional).isPresent();
-        assertThat(updatedCustomerOptional.get().getName()).isEqualTo("New Name");
+        assertThat(updatedCustomer).isNotNull();
+        assertThat(updatedCustomer.getName()).isEqualTo("New Name");
+        assertThat(updatedCustomer.getId()).isEqualTo(savedCustomer.getId());
+        assertThat(updatedCustomer.getId()).isNotEqualTo(999);
     }
 
     @Test
@@ -106,5 +111,13 @@ class CustomerServiceTest {
 
         assertThat(deleted).isTrue();
         assertThat(customerService.getCustomerById(savedCustomer.getId())).isEmpty();
+    }
+
+    @Test
+    @Transactional
+    void testUpdateCustomerNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            customerService.updateCustomerById(999, CustomerDTO.builder().name("New Name").build());
+        });
     }
 }

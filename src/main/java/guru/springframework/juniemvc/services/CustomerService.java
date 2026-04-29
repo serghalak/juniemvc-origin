@@ -13,7 +13,7 @@ public interface CustomerService {
 
     CustomerDTO saveNewCustomer(CustomerDTO customer);
 
-    Optional<CustomerDTO> updateCustomerById(Integer customerId, CustomerDTO customer);
+    CustomerDTO updateCustomerById(Integer customerId, CustomerDTO customer);
 
     Boolean deleteById(Integer customerId);
 }

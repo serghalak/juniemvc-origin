@@ -1,6 +1,7 @@
 package guru.springframework.juniemvc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.springframework.juniemvc.exceptions.NotFoundException;
 import guru.springframework.juniemvc.model.CustomerDTO;
 import guru.springframework.juniemvc.services.CustomerService;
 import org.junit.jupiter.api.Test;
@@ -89,7 +90,7 @@ class CustomerControllerTest {
                 .postalCode("10001")
                 .build();
 
-        given(customerService.updateCustomerById(any(), any())).willReturn(Optional.of(customer));
+        given(customerService.updateCustomerById(any(), any())).willReturn(customer);
 
         mockMvc.perform(put("/api/v1/customer/1")
                 .accept(MediaType.APPLICATION_JSON)
@@ -109,5 +110,22 @@ class CustomerControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(customerService).deleteById(any());
+    }
+
+    @Test
+    void testUpdateCustomerNotFound() throws Exception {
+        given(customerService.updateCustomerById(any(), any())).willThrow(NotFoundException.class);
+
+        mockMvc.perform(put("/api/v1/customer/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(CustomerDTO.builder()
+                        .name("New Name")
+                        .addressLine1("Addr")
+                        .city("City")
+                        .state("ST")
+                        .postalCode("12345")
+                        .build())))
+                .andExpect(status().isNotFound());
     }
 }

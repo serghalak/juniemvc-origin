@@ -37,9 +37,8 @@ class CustomerController {
     @PutMapping("/{customerId}")
     ResponseEntity<Void> updateById(@PathVariable("customerId") Integer customerId,
                                     @RequestBody @Validated CustomerDTO customer) {
-        if (customerService.updateCustomerById(customerId, customer).isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        customerService.updateCustomerById(customerId, customer);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

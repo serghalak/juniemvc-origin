@@ -1,5 +1,6 @@
 package guru.springframework.juniemvc.services;
 
+import guru.springframework.juniemvc.exceptions.NotFoundException;
 import guru.springframework.juniemvc.entities.Customer;
 import guru.springframework.juniemvc.mappers.CustomerMapper;
 import guru.springframework.juniemvc.model.CustomerDTO;
@@ -44,19 +45,12 @@ class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<CustomerDTO> updateCustomerById(Integer customerId, CustomerDTO customerDto) {
-        return customerRepository.findById(customerId).map(foundCustomer -> {
-            foundCustomer.setName(customerDto.getName());
-            foundCustomer.setEmail(customerDto.getEmail());
-            foundCustomer.setPhoneNumber(customerDto.getPhoneNumber());
-            foundCustomer.setAddressLine1(customerDto.getAddressLine1());
-            foundCustomer.setAddressLine2(customerDto.getAddressLine2());
-            foundCustomer.setCity(customerDto.getCity());
-            foundCustomer.setState(customerDto.getState());
-            foundCustomer.setPostalCode(customerDto.getPostalCode());
-            foundCustomer.setVersion(customerDto.getVersion());
-            return customerMapper.customerToCustomerDto(customerRepository.save(foundCustomer));
-        });
+    public CustomerDTO updateCustomerById(Integer customerId, CustomerDTO customerDto) {
+        Customer foundCustomer = customerRepository.findById(customerId)
+                .orElseThrow(NotFoundException::new);
+
+        customerMapper.updateCustomerFromDto(customerDto, foundCustomer);
+        return customerMapper.customerToCustomerDto(customerRepository.save(foundCustomer));
     }
 
     @Override
